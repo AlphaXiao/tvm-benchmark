@@ -28,8 +28,8 @@ def benmarch_pytorch_lstm(is_tvm=False, opt_level=0):
         inputs = model_inputs()
         model = get_pytorch_model()
         if is_tvm:
+            torch_tvm.enable(opt_level=opt_level, device_type="cpu", device="llvm -mcpu=core-avx2", host="llvm -mcpu=core-avx2")
             # torch_tvm.enable(opt_level=opt_level)
-            torch_tvm.enable(opt_level=opt_level, device_type="cpu", device="llvm", host="llvm")
         
         # This is where all the compilation happens.
         mod = torch.jit.trace(model, inputs)

@@ -58,7 +58,9 @@
 
 * LSTM (tf_lstm.py)
 
-    会出现 `KeyError: ‘rnn/TensorArray:1’` Error，暂时没找到修复的办法。尝试过社区提供的[一些办法](https://discuss.tvm.ai/t/tensorarray-globalvar-and-globaltypevar-confusion/4567/23)，仍然有问题。
+    ~~会出现 `KeyError: ‘rnn/TensorArray:1’` Error，暂时没找到修复的办法。尝试过社区提供的[一些办法](https://discuss.tvm.ai/t/tensorarray-globalvar-and-globaltypevar-confusion/4567/23)，仍然有问题。~~ fixed by [branch](https://github.com/soiferj/tvm/commit/b9d14c59fcc069f122461a21270d51bb4825ae66)
+
+    目前仍然会出现 `AttributeError: relay.Call object has no attributed type_annotation`
 
 ### MXNet + TVM
 
@@ -83,6 +85,26 @@
     tvm compiling ...
     tvm compiling completed. spent 3.496346 seconds
     tvm lstm opt=3       1.99 ms             (1.54 ms)
+    ```
+
+    target = "llvm -mcpu=core-avx2"
+    ```
+    mxnet lstm_cell: 26.27 ms
+    mxnet lstm fuse: 2.11 ms
+    tvm compiling ...
+    WARNING:autotvm:Cannot find config for target=llvm -mcpu=core-avx2, workload=('dense', (1, 2, 'float32'), (8, 2, 'float32'), 0, 'float32'). A fallback configuration is used, which may bring great performance regression.
+    WARNING:autotvm:Cannot find config for target=llvm -mcpu=core-avx2, workload=('dense', (1, 800, 'float32'), (8, 800, 'float32'), 0, 'float32'). A fallback configuration is used, which may bring great performance regression.
+    tvm compiling completed. spent 2.367452 seconds
+    tvm lstm_cell opt=0  1.99 ms             (0.25 ms)
+    tvm compiling ...
+    tvm compiling completed. spent 18.370862 seconds
+    tvm lstm_cell opt=3  1.75 ms             (0.22 ms)
+    tvm compiling ...
+    tvm compiling completed. spent 1.780173 seconds
+    tvm lstm opt=0       2.11 ms             (0.37 ms)
+    tvm compiling ...
+    tvm compiling completed. spent 4.781243 seconds
+    tvm lstm opt=3       1.68 ms             (0.16 ms)
     ```
 
     target = "cuda", GPU: Nvidia 1080Ti

@@ -40,14 +40,15 @@ from tvm.contrib import cc
 target_dir = "tvm_model"
 data_shape = (30, 1, 800)
 merge_outputs = True
-is_gpu = True
+is_gpu = False
 if is_gpu:
     target = 'cuda'
     mxnet_ctx = mx.gpu
 else:
     # target = 'llvm -mcpu=broadwell'
     # target = 'llvm -mcpu=cascadelake'
-    target = 'llvm -target=x86_64-linux-gnu'
+    target = 'llvm -mcpu=core-avx2'
+    # target = 'llvm -target=x86_64-linux-gnu'
     mxnet_ctx = mx.cpu
 
 

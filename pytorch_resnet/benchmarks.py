@@ -19,6 +19,7 @@ def genImage():
 
 def benchmark(model, csv_file, input_fn=genImage, iters=100, warmup=10):
     with torch.no_grad():
+        torch_tvm.disable()
         inputs = input_fn()
         print("Tracing model with JIT")
         trace_jit = torch.jit.trace(model, inputs)
@@ -36,7 +37,7 @@ def benchmark(model, csv_file, input_fn=genImage, iters=100, warmup=10):
         d = os.path.dirname(os.path.abspath(__file__))
         fn = os.path.join(d, "autotvm_tuning.log")
         with autotvm.apply_history_best(fn):
-            torch_tvm.enable(opt_level=3)
+            torch_tvm.enable(opt_level=3, device_type="cpu", device="llvm -mcpu=core-avx2", host="llvm -mcpu=core-avx2")
             print("Tracing model with TVM")
             trace_tvm = torch.jit.trace(model, inputs)
             print("Warming TVM up with {} iters".format(warmup))

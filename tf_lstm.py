@@ -80,7 +80,7 @@ def tf_tvm_lstm(opt_level):
         mod, params = relay.frontend.from_tensorflow(graph_def, 
             shape={"Placeholder":data_shape, "Placeholder_1":[6, 2, data_shape[0], 2]})
         with relay.build_config(opt_level=3):
-            graph, lib, params = relay.build(mod, target="x86_64-linux-gnu")
+            graph, lib, params = relay.build(mod, target="llvm -mcpu=core-avx2")
         tic = time.time() - tic
         print("tvm compiling completed. spent %f seconds" % tic)
         
